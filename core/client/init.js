@@ -49,6 +49,9 @@
     };
 
     Ghost.init = function () {
+        // remove the temporary message which appears
+        $('.js-msg').remove();
+
         Ghost.router = new Ghost.Router();
 
         // This is needed so Backbone recognizes elements already rendered server side

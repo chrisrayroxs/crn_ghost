@@ -12,8 +12,7 @@ Importer000 = function () {
 
     this.importFrom = {
         '000': this.basicImport,
-        '001': this.basicImport,
-        '002': this.basicImport
+        '001': this.basicImport
     };
 };
 

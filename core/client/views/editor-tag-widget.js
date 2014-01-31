@@ -134,12 +134,6 @@
             var $target = $(e.currentTarget),
                 searchTerm = $.trim($target.val());
 
-            if (searchTerm) {
-                this.showSuggestions($target, searchTerm);
-            } else {
-                this.$suggestions.hide();
-            }
-
             if (e.keyCode === this.keys.UP) {
                 e.preventDefault();
                 if (this.$suggestions.is(":visible")) {
@@ -164,6 +158,12 @@
 
             if (e.keyCode === this.keys.UP || e.keyCode === this.keys.DOWN) {
                 return false;
+            }
+
+            if (searchTerm) {
+                this.showSuggestions($target, searchTerm);
+            } else {
+                this.$suggestions.hide();
             }
         },
 

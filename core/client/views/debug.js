@@ -5,17 +5,12 @@
     Ghost.Views.Debug = Ghost.View.extend({
         events: {
             "click .settings-menu a": "handleMenuClick",
-            "click #startupload": "handleUploadClick",
             "click .js-delete": "handleDeleteClick"
         },
 
         initialize: function () {
-            var view = this;
-
-            this.uploadButton = this.$el.find('#startupload');
-
             // Disable import button and initizalize BlueImp file upload
-            this.uploadButton.prop('disabled', 'disabled');
+            $('#startupload').prop('disabled', true);
             $('#importfile').fileupload({
                 url: Ghost.paths.apiRoot + '/db/',
                 limitMultiFileUploads: 1,
@@ -26,12 +21,16 @@
                 dataType: 'json',
                 add: function (e, data) {
                     /*jslint unparam:true*/
-
-                    // Bind the upload data to the view, so it is
-                    // available to the click handler, and enable the
-                    // upload button.
-                    view.fileUploadData = data;
-                    data.context = view.uploadButton.removeProp('disabled');
+                    // unregister click event to preveng duplicate binding
+                    $('#startupload').off("click");
+                    data.context = $('#startupload').prop('disabled', false)
+                        .click(function () {
+                            $('#startupload').prop('disabled', true);
+                            data.context = $('#startupload').text('Importing');
+                            data.submit();
+                            // unregister click event to allow different subsequent uploads
+                            $('#startupload').off('click');
+                        });
                 },
                 done: function (e, data) {
                     /*jslint unparam:true*/
@@ -76,18 +75,6 @@
             this.$("#debug-" + $target.attr("class")).show();
 
             return false;
-        },
-
-        handleUploadClick: function (ev) {
-            ev.preventDefault();
-
-            if (!this.uploadButton.prop('disabled')) {
-                this.fileUploadData.context = this.uploadButton.text('Importing');
-                this.fileUploadData.submit();
-            }
-
-            // Prevent double post by disabling the button.
-            this.uploadButton.prop('disabled', 'disabled');
         },
 
         handleDeleteClick: function (ev) {

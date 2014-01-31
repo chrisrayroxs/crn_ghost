@@ -39,11 +39,11 @@ BSStore.prototype.set = function (sid, sessData, callback) {
     sessionModel.forge({id: sid}).fetch()
         .then(function (model) {
             if (model) {
-                return sessionModel.forge({id: sid, expires: expires, sess: sessData }).save();
+                sessionModel.forge({id: sid, expires: expires, sess: sessData }).save();
+            } else {
+                sessionModel.forge({id: sid, expires: expires, sess: sessData })
+                    .save(null, {method: 'insert'});
             }
-            return sessionModel.forge({id: sid, expires: expires, sess: sessData })
-                .save(null, {method: 'insert'});
-        }).then(function () {
             callback();
         });
 };
